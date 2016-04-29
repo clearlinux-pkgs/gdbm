@@ -4,7 +4,7 @@
 #
 Name     : gdbm
 Version  : 1.11
-Release  : 11
+Release  : 12
 URL      : ftp://ftp.gnu.org/gnu/gdbm/gdbm-1.11.tar.gz
 Source0  : ftp://ftp.gnu.org/gnu/gdbm/gdbm-1.11.tar.gz
 Summary  : No detailed summary available
