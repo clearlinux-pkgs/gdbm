@@ -4,12 +4,12 @@
 #
 Name     : gdbm
 Version  : 1.11
-Release  : 13
+Release  : 14
 URL      : ftp://ftp.gnu.org/gnu/gdbm/gdbm-1.11.tar.gz
 Source0  : ftp://ftp.gnu.org/gnu/gdbm/gdbm-1.11.tar.gz
 Summary  : No detailed summary available
 Group    : Development/Tools
-License  : GPL-3.0+ GPL-3.0
+License  : GFDL-1.3 GPL-3.0 GPL-3.0+
 Requires: gdbm-bin
 Requires: gdbm-lib
 Requires: gdbm-doc
@@ -43,6 +43,7 @@ Summary: dev components for the gdbm package.
 Group: Development
 Requires: gdbm-lib
 Requires: gdbm-bin
+Provides: gdbm-devel
 
 %description dev
 dev components for the gdbm package.
@@ -77,10 +78,13 @@ locales components for the gdbm package.
 
 %build
 %configure --disable-static --enable-libgdbm-compat
-make V=1 %{?_smp_mflags}
+make V=1  %{?_smp_mflags}
 
 %check
-make V=1 %{?_smp_mflags} check
+export http_proxy=http://127.0.0.1:9/
+export https_proxy=http://127.0.0.1:9/
+export no_proxy=localhost
+make VERBOSE=1 V=1 %{?_smp_mflags} check
 
 %install
 rm -rf %{buildroot}
