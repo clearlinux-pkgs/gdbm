@@ -1,3 +1,75 @@
+2016-05-16  Sergey Poznyakoff  <gray@gnu.org.ua>
+
+	Version 1.12
+
+2016-05-16  Sergey Poznyakoff  <gray@gnu.org.ua>
+
+	* src/gdbmtool.c (_gdbm_print_bucket_cache): Use %zu to print
+	size_t.
+	* src/gdbmtool.h (variable_unset): New proto.
+	(yyerror): Argument is char const *.
+	* src/gram.y: Likewise.
+	* src/lex.l: Add option noinput
+	* src/parseopt.c (print_option_descr): Use fwrite instead of
+	printf.
+	* src/var.c: Fix initializers to suppress warnings.
+
+2015-12-05  Sergey Poznyakoff  <gray@gnu.org.ua>
+
+	* doc/gendocs_template: Add references to manpages.
+
+2015-12-05  Harald Hoyer <harald@redhat.com>
+
+	* doc/gdbmtool.1: Minor change.
+	* doc/gdbm.3: Fix typo.
+
+2015-11-02  Sergey Poznyakoff  <gray@gnu.org.ua>
+
+	Tiny fix
+
+	* var.c: Use ISO C99 initializers.  Thanks to
+	Brad Forschinger <bnjf@bnjf.id.au>
+
+2015-08-14  Sergey Poznyakoff  <gray@gnu.org.ua>
+
+	Fix doc generation.
+
+	* doc/Config: Rename to doc/html.init.
+	* doc/gdbm.texinfo: Fix sectioning.
+
+2015-08-13  Sergey Poznyakoff  <gray@gnu.org.ua>
+
+	Minor fix in docs
+
+	* doc/gdbm.texinfo: Fix direntry records.
+
+2014-07-03  Sergey Poznyakoff  <gray@gnu.org.ua>
+
+	Bugfix.
+
+	* src/lex.l (expand_char): Don't return any value.
+
+2014-02-14  Sergey Poznyakoff  <gray@gnu.org.ua>
+
+	Optionally install compatibility headers into a separate directory.
+
+	* configure.ac: Version 1.11.90
+	(COMPATINCLUDEDIR): New substitution variable.
+	* compat/Makefile.am (compatincludedir): New variable.
+	(include_HEADERS): Rename to compatinclude_HEADERS.
+	* NEWS: Document COMPATINCLUDEDIR.
+	* README: Likewise.
+
+2014-02-12  Sergey Poznyakoff  <gray@gnu.org.ua>
+
+	* src/gdbmimp.c (gdbm_import_from_file): Read record sizes as
+	unsigned long, as they are stored by gdbm_export_to_file.
+	Improve error reporting.
+
+2014-02-06  Sergey Poznyakoff  <gray@gnu.org.ua>
+
+	* doc/Makefile.am: Use dist_man_MANS
+
 2013-12-25  Sergey Poznyakoff  <gray@gnu.org.ua>
 
 	Version 1.11
