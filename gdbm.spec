@@ -4,7 +4,7 @@
 #
 Name     : gdbm
 Version  : 1.12
-Release  : 15
+Release  : 16
 URL      : ftp://ftp.gnu.org/gnu/gdbm/gdbm-1.12.tar.gz
 Source0  : ftp://ftp.gnu.org/gnu/gdbm/gdbm-1.12.tar.gz
 Summary  : No detailed summary available
@@ -105,7 +105,8 @@ rm -rf %{buildroot}
 %files dev
 %defattr(-,root,root,-)
 /usr/include/*.h
-/usr/lib64/*.so
+/usr/lib64/libgdbm.so
+/usr/lib64/libgdbm_compat.so
 
 %files doc
 %defattr(-,root,root,-)
@@ -115,7 +116,10 @@ rm -rf %{buildroot}
 
 %files lib
 %defattr(-,root,root,-)
-/usr/lib64/*.so.*
+/usr/lib64/libgdbm.so.4
+/usr/lib64/libgdbm.so.4.0.0
+/usr/lib64/libgdbm_compat.so.4
+/usr/lib64/libgdbm_compat.so.4.0.0
 
 %files locales -f gdbm.lang 
 %defattr(-,root,root,-)
