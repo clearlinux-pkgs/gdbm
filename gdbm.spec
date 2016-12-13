@@ -4,7 +4,7 @@
 #
 Name     : gdbm
 Version  : 1.12
-Release  : 16
+Release  : 17
 URL      : ftp://ftp.gnu.org/gnu/gdbm/gdbm-1.12.tar.gz
 Source0  : ftp://ftp.gnu.org/gnu/gdbm/gdbm-1.12.tar.gz
 Summary  : No detailed summary available
@@ -16,6 +16,11 @@ Requires: gdbm-doc
 Requires: gdbm-locales
 BuildRequires : bison
 BuildRequires : flex
+BuildRequires : gcc-dev32
+BuildRequires : gcc-libgcc32
+BuildRequires : gcc-libstdc++32
+BuildRequires : glibc-dev32
+BuildRequires : glibc-libc32
 
 %description
 See the end of file for copying conditions.
@@ -49,6 +54,16 @@ Provides: gdbm-devel
 dev components for the gdbm package.
 
 
+%package dev32
+Summary: dev32 components for the gdbm package.
+Group: Default
+Requires: gdbm-lib32
+Requires: gdbm-bin
+
+%description dev32
+dev32 components for the gdbm package.
+
+
 %package doc
 Summary: doc components for the gdbm package.
 Group: Documentation
@@ -65,6 +80,14 @@ Group: Libraries
 lib components for the gdbm package.
 
 
+%package lib32
+Summary: lib32 components for the gdbm package.
+Group: Default
+
+%description lib32
+lib32 components for the gdbm package.
+
+
 %package locales
 Summary: locales components for the gdbm package.
 Group: Default
@@ -75,12 +98,22 @@ locales components for the gdbm package.
 
 %prep
 %setup -q -n gdbm-1.12
+pushd ..
+cp -a gdbm-1.12 build32
+popd
 
 %build
 export LANG=C
 %configure --disable-static --enable-libgdbm-compat
 make V=1  %{?_smp_mflags}
 
+pushd ../build32/
+export CFLAGS="$CFLAGS -m32"
+export CXXFLAGS="$CXXFLAGS -m32"
+export LDFLAGS="$LDFLAGS -m32"
+%configure --disable-static --enable-libgdbm-compat  --libdir=/usr/lib32 --build=i686-generic-linux-gnu --host=i686-generic-linux-gnu --target=i686-clr-linux-gnu
+make V=1  %{?_smp_mflags}
+popd
 %check
 export LANG=C
 export http_proxy=http://127.0.0.1:9/
@@ -90,6 +123,15 @@ make VERBOSE=1 V=1 %{?_smp_mflags} check
 
 %install
 rm -rf %{buildroot}
+pushd ../build32/
+%make_install32
+if [ -d  %{buildroot}/usr/lib32/pkgconfig ]
+then
+pushd %{buildroot}/usr/lib32/pkgconfig
+for i in *.pc ; do mv $i 32$i ; done
+popd
+fi
+popd
 %make_install
 %find_lang gdbm
 
@@ -108,6 +150,11 @@ rm -rf %{buildroot}
 /usr/lib64/libgdbm.so
 /usr/lib64/libgdbm_compat.so
 
+%files dev32
+%defattr(-,root,root,-)
+/usr/lib32/libgdbm.so
+/usr/lib32/libgdbm_compat.so
+
 %files doc
 %defattr(-,root,root,-)
 %doc /usr/share/info/*
@@ -120,6 +167,13 @@ rm -rf %{buildroot}
 /usr/lib64/libgdbm.so.4.0.0
 /usr/lib64/libgdbm_compat.so.4
 /usr/lib64/libgdbm_compat.so.4.0.0
+
+%files lib32
+%defattr(-,root,root,-)
+/usr/lib32/libgdbm.so.4
+/usr/lib32/libgdbm.so.4.0.0
+/usr/lib32/libgdbm_compat.so.4
+/usr/lib32/libgdbm_compat.so.4.0.0
 
 %files locales -f gdbm.lang 
 %defattr(-,root,root,-)
