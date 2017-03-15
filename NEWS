@@ -1,8 +1,130 @@
-GNU dbm NEWS -- history of user-visible changes. 2016-05-16
-Copyright (C) 1990-2016 Free Software Foundation, Inc.
+GNU dbm NEWS -- history of user-visible changes. 2017-03-11
+Copyright (C) 1990-2017 Free Software Foundation, Inc.
 See the end of file for copying conditions.
 
 Please send gdbm bug reports to <bug-gdbm@gnu.org>.
+
+Version 1.13 - 2017-03-11
+
+* gdbm_fetch, gdbm_firstkey, and gdbm_nextkey behavior
+
+If the requested key was not found, these functions return datum with
+dptr pointing to NULL and set gdbm_errno to GDBM_ITEM_NOT_FOUND (in
+prior releases, gdbm_errno was set to GDBM_NO_ERROR),
+
+If an error occurred, dptr is set to NULL, and gdbm_errno to
+the error code.
+
+In any case gdbm_errno is guaranteed to have meaningful value upon
+return.
+
+* Error handling
+
+In previous versions of GDBM, fatal errors (such as write error while
+storing the key/data pair or bucket) caused immediate termination of
+the program via call to exit(3).  This is no longer the case.
+
+Starting from this version, if a fatal error occurrs while modifying
+the database file, that database is marked as needing recovery and
+gdbm_errno is set to GDBM_NEED_RECOVERY.  Calls to any GDBM functions,
+except gdbm_recover, will then return immediately with the same error
+code.
+
+The function gdbm_recover examines the database file and fixes
+eventual inconsistencies.  Upon successful return it clears the error
+state and makes the database operational again.
+
+For backward compatibility, the fatal_func argument to gdbm_open is
+retained and its functionality is not changed.  If it is not NULL, the
+new error handling procedures are disabled, the function it points to
+will be called upon fatal errors.  When it returns, exit(1) will be
+called.
+
+* Per-database error codes
+
+In addition to gdbm_error global variable, the most recent error state
+is saved in the GDBM_FILE structure.  This facilitates error handling
+when operating multiple GDBM databases simultaneously.
+
+The following new functions are implemented for manipulating error
+states:
+
+** gdbm_error gdbm_last_errno (GDBM_FILE dbf)
+
+Returns the code of the most recent error that occurred in the given database.
+
+** int gdbm_last_syserr (GDBM_FILE dbf)
+
+Returns the value the system errno variable had when the most recent
+error occurred.  This provides additional information for such error
+codes as GDBM_FILE_SEEK_ERROR, GDBM_FILE_WRITE_ERROR and the like.
+
+** void gdbm_clear_error (GDBM_FILE dbf)
+
+Clears the error state associated with the database file.
+
+** char const *gdbm_db_strerror (GDBM_FILE dbf)
+
+Returns textual description of the error.
+
+** int gdbm_needs_recovery (GDBM_FILE dbf)
+
+Returns true if the database file needs recovery.
+
+* New gdbm_open flag: GDBM_BSEXACT
+
+When creating a new database, the gdbm_open function will adjust the
+requested block size so that the block can hold integer number of
+directory entries.  Thus, the resulting block size can be bigger than
+the requested one.  If the GDBM_BSEXACT flag is set, this behavior is
+suppressed and gdbm_open will try to force exactly the requested block
+size.  If unable to do so, it will set the gdbm_errno variable to
+GDBM_BLOCK_SIZE_ERROR and return NULL.
+
+* New gdbm_setopt option: GDBM_GETBLOCKSIZE
+
+Returns the block size in bytes.  E.g.
+
+ int size;
+ if (gdbm_setopt (dbf, GDBM_GETBLOCKSIZE, &size, sizeof size))
+   abort ();
+ ...
+
+* New functions
+
+** GDBM_FILE gdbm_fd_open (int fd, const char *file_name, int block_size,
+		           int flags, void (*fatal_func) (const char *))
+
+Alternative function for opening a GDBM database.  The fd argument is
+the file descriptor of the database file obtained by a call to
+open(2), creat(2) or similar functions.  The descriptor is not dup'ed, and
+will be closed when the returned GDBM_FILE is closed.  Use dup(2) if
+that is not desirable.
+			   
+** int gdbm_copy_meta (GDBM_FILE dst, GDBM_FILE src)
+
+Copy meta-information (ownership and file permissions) from src to dst.
+
+* gdbmtool
+
+** Line editing in gdbmtool
+
+The gdbmtool utility now offers the usual line-editing facilities (if
+the package has been compiled with GNU Readline.
+
+** Keyboard shortcuts
+
+If the last entered command was "next", hitting the "Enter" key
+repeats it without arguments.
+
+* Magic file included
+
+The magic file suitable for use with the file(1) command is
+distributed with the package.  Its name is src/gdbm.magic.
+
+It is not installed by default, as its installation location differs
+considerably between various distributions.
+
 
 Version 1.12, 2016-05-16
 
@@ -248,7 +370,7 @@ Version 0.9
 ----------------------------------------------------------------------
 Copyright information:
 
-Copyright (C) 1990-2016 Free Software Foundation, Inc.
+Copyright (C) 1990-2017 Free Software Foundation, Inc.
 
    Permission is granted to anyone to make or distribute verbatim copies
    of this document as received, in any medium, provided that the

@@ -1,3 +1,506 @@
+2017-03-11  Sergey Poznyakoff  <gray@gnu.org>
+
+	Version 1.13
+
+2017-03-07  Sergey Poznyakoff  <gray@gnu.org>
+
+	Fix parralel builds
+
+	* src/Makefile.am: Add dependency for gram.h
+
+	Reported by Petr Ovtchenkov <ptr@void-ptr.info>
+
+2017-01-02  Sergey Poznyakoff  <gray@gnu.org>
+
+	Happy GNU Year
+
+2016-12-21  Sergey Poznyakoff  <gray@gnu.org>
+
+	Minor fix
+
+	* src/mmap.c (_gdbm_internal_remap): Avoid munmapping NULL pointer.
+	Make sure mapped_region isn't a dangling pointer.
+
+2016-08-06  Sergey Poznyakoff  <gray@gnu.org.ua>
+
+	Fix typos
+
+2016-07-27  Sergey Poznyakoff  <gray@gnu.org.ua>
+
+	Remove obsolete error code.
+
+	* doc/gdbm.texi: Remove description of GDBM_UNKNOWN_UPDATE.
+	Document GDBM_DIR_OVERFLOW.
+	* src/gdbm.h.in (GDBM_ERR_DIR_OVERFLOW): Rename to GDBM_DIR_OVERFLOW.
+	(GDBM_UNKNOWN_ERROR): New error code.
+	(GDBM_UNKNOWN_UPDATE): Define to GDBM_UNKNOWN_ERROR for
+	backward compatibility.
+	* src/gdbmerrno.c (gdbm_strerror, gdbm_db_strerror): Simplify a bit
+
+	Avoid range error when doubling directory size.
+
+	* src/bucket.c (_gdbm_split_bucket): Avoid range error
+	when doubling directory size.
+	* src/gdbm.h.in (GDBM_ERR_DIR_OVERFLOW): New error code.
+	* src/gdbmerrno.c (gdbm_errlist): Describe GDBM_ERR_DIR_OVERFLOW.
+
+2016-07-26  Sergey Poznyakoff  <gray@gnu.org.ua>
+
+	Update gdbm.magic
+
+	* src/gdbm.magic: Explicitly handle big- and little-endian databases.
+
+	Minor changes
+
+	* src/bucket.c (_gdbm_read_bucket_at): Remove unused variable.
+	* src/debug.c: Include ctype.h
+	(datbuf_format): Don't use sprintf; Precede each output line
+	with data offset.
+
+	Fix remaining uses of gdbm_set_errno function.
+
+	Use the GDBM_SET_ERRNO and GDBM_SET_ERRNO2 macros to make
+	sure the error gets reported in debug output.
+
+	* src/fullio.c (_gdbm_full_read)
+	(_gdbm_full_write): Return -1 and set gdbm_errno
+	on error.
+	* src/bucket.c: Use GDBM_SET_ERRNO(2?) or
+	GDBM_DEBUG where necessary.
+	* src/falloc.c: Likewise.
+	* src/findkey.c: Likewise.
+	* src/gdbmdefs.h: Likewise.
+	* src/gdbmopen.c: Likewise.
+	* src/gdbmstore.c: Likewise.
+	* src/mmap.c: Likewise.
+	* src/recover.c: Likewise.
+	* src/update.c: Likewise.
+
+2016-07-25  Sergey Poznyakoff  <gray@gnu.org.ua>
+
+	Improve debugging and error tracing.
+
+	* src/gdbmdefs.h (GDBM_SET_ERRNO)
+	(GDBM_SET_ERRNO2): New macros.
+
+	* src/base64.c: Use new macros to set error state.
+	* src/bucket.c: Likewise.
+	* src/falloc.c: Likewise.
+	* src/findkey.c: Likewise.
+	* src/gdbm_load.c: Likewise.
+	* src/gdbmdelete.c: Likewise.
+	* src/gdbmdump.c: Likewise.
+	* src/gdbmexp.c: Likewise.
+	* src/gdbmfetch.c: Likewise.
+	* src/gdbmimp.c: Likewise.
+	* src/gdbmload.c: Likewise.
+	* src/gdbmopen.c: Likewise.
+	* src/gdbmseq.c: Likewise.
+	* src/gdbmsetopt.c: Likewise.
+	* src/gdbmstore.c: Likewise.
+
+	* src/gdbmtool.c: Fix preprocessor conditional.
+
+	Fix distribution
+
+	* src/Makefile.am: Mark gdbm.h as noinst
+	* compat/Makefile.am (AM_CPPFLAGS): Make sure we pick up
+	../src/gdbm.h
+
+	Improve the "next" shortcut.
+
+	* src/gdbmtool.c (open_handler): Close the previously
+	opened database.
+	(close_handler): Free the file name.
+	(print_dir_handler): Print the number of buckets.
+	(command_repeat_type): New enum.
+	(command) <repeat>: Change type to enum command_repeat_type.
+	(command_tab): Update accordingly. Mark "next" with REPEAT_NOARG.
+	(run_last_command): Handle REPEAT_NOARG separately.
+	* NEWS: Document the shortcut.
+	* doc/gdbm.texi: Likewise.
+	* src/debug.c (datbuf_format): Don't represent
+	bytes after the end of datum as zeros.
+	(gdbm_debug_datum): Print datum size.
+
+	Add debug info.
+
+	* configure.ac: Fix description wording.
+	* src/Makefile.am [GDBM_COND_DEBUG_ENABLE]: Don't
+	define GDBM_DEBUG_ENABLE.
+	* tests/Makefile.am: Likewise.
+	* src/debug.c (gdbm_debug_printer)
+	(gdbm_debug_flags): New globals.
+	(gdbm_debug_token, gdbm_debug_parse_state)
+	(gdbm_debug_datum): New functions.
+	* src/gdbm.h.in [@GDBM_DEBUG_ENABLE@]: Define GDBM_DEBUG_ENABLE.
+	(gdbm_debug_printer_t): New typedef.
+	(gdbm_debug_printer, gdbm_debug_flags): New externs.
+	(GDBM_DEBUG_ERR,GDBM_DEBUG_OPEN)
+	(GDBM_DEBUG_READ,GDBM_DEBUG_STORE)
+	(GDBM_DEBUG_LOOKUP,GDBM_DEBUG_ALL): New defines.
+	(gdbm_debug_token,gdbm_debug_parse_state)
+	(gdbm_debug_datum): New protos.
+	* src/gdbmdefs.h (GDBM_DEBUG,GDBM_DEBUG_DATUM): New macros.
+
+	* src/findkey.c: Add debugging info.
+	* src/gdbmfetch.c: Likewise.
+	* src/gdbmopen.c: Likewise.
+	* src/gdbmseq.c: Likewise.
+	* src/gdbmstore.c: Likewise.
+	* src/gdbmtool.c (open_handler): Allow the use of ~/
+	(command) <repeat,variadic>: New members.
+	(run_command): Handle variadic functions.
+	(run_last_command): New command.  In interactive mode,
+	repeats the last command if it was marked
+	with repeat=1 (currently, only "next").
+	New command: "debug".
+	(all functions): Use terror instead of fprintf(stderr,...);
+	* src/gdbmtool.h (handler_param) <vararg>: New member.
+	(run_last_command): New proto.
+	* src/gram.y: Call run_last_command) on empty input.
+	* tests/gtload.c: New option: -debug=
+
+2016-07-20  Sergey Poznyakoff  <gray@gnu.org>
+
+	Introduce debug hooks.
+
+	* configure.ac: New option --enable-debug
+	Print feature summary at the end of the run.
+
+	* src/debug.c: New file.
+	* src/Makefile.am [GDBM_COND_DEBUG_ENABLE]: Build debug.o
+	Define GDBM_DEBUG_ENABLE.
+	* src/gdbmdefs.h [GDBM_DEBUG_ENABLE] (_gdbm_debug_hook_install)
+	(_gdbm_debug_hook_remove,_gdbm_debug_hook_check)
+	(_gdbm_debug_hook_val): New protos.
+	(GDBM_DEBUG_HOOK, GDBM_DEBUG_OVERRIDE)
+	(GDBM_DEBUG_ALLOC): New defines.
+	* src/gdbm.h.in (GDBM_RCVR_FORCE): New flag.
+	* src/recover.c (gdbm_recover): Check database before attempting
+	recovery, unless GDBM_RCVR_FORCE flag is set.
+	* doc/gdbm.texi: Document GDBM_RCVR_FORCE
+	* src/gdbmreorg.c (gdbm_reorganize): Use GDBM_RCVR_FORCE.
+
+	* src/gdbmtool.c (main): Always allocate file_name.
+
+	* src/bucket.c: Put GDBM_DEBUG_OVERRIDE and GDBM_DEBUG_ALLOC
+	in critical places.
+	* src/falloc.c: Likewise.
+	* src/findkey.c: Likewise.
+	* src/gdbmopen.c: Likewise.
+	* src/gdbmstore.c: Likewise.
+	* src/update.c: Likewise.
+
+	* tests/Makefile.am [GDBM_COND_DEBUG_ENABLE]: Define GDBM_DEBUG_ENABLE.
+	* tests/gtload.c: New options -hook, -recover, -verbose,
+	-backup, -max-failures, -max-failed-keys,
+	and -max-failed-buckets.
+	Attempt recovery after errors.
+
+	Fix typo
+
+2016-07-19  Sergey Poznyakoff  <gray@gnu.org>
+
+	Improve docs. Minor changes.
+
+	* NEWS: Document new features.
+	* doc/gdbm.texi: Likewise.
+	* src/gdbm.h.in (gdbm_last_errno): Fix return value.
+	(gdbm_check_syserr): New proto.
+	* src/gdbmdefs.h (gdbm_file_info) <last_error>: Fix data type.
+	* src/gdbmerrno.c (gdbm_last_errno): Fix return value.
+	(gdbm_check_syserr): New function.
+
+	Implement gdbm_recover function
+
+	* configure.ac: Don't check for rename.
+	* src/Makefile.am (libgdbm_la_SOURCES): Add recover.c
+	* src/recover.c: New file.
+	* src/bucket.c (_gdbm_get_bucket): Remove extra space before [
+	* src/err.c (prerror): Take additional argument
+	(gdbm_perror): Print system errno if necessary.
+	* src/gdbm.h.in (GDBM_CLOERROR): New flag.
+	(gdbm_fd_open, gdbm_copy_meta): New proto.
+	(gdbm_last_syserr,gdbm_db_strerror,gdbm_recover): New proto.
+	(gdbm_syserr): New extern.
+	(gdbm_recovery): New struct.
+	(GDBM_RCVR_DEFAULT,GDBM_RCVR_ERRFUN)
+	(GDBM_RCVR_MAX_FAILED_KEYS)
+	(GDBM_RCVR_MAX_FAILED_BUCKETS)
+	(GDBM_RCVR_MAX_FAILURES)
+	(GDBM_RCVR_BACKUP): New flags.
+	(GDBM_BACKUP_FAILED): New error code.
+	* src/gdbmclose.c (gdbm_close): Work correctly if dbf->desc == -1.
+	* src/gdbmcount.c (gdbm_count): Remove spurious sorting.
+	Use _gdbm_next_bucket_dir for iterating over the buckets.
+	* src/gdbmdefs.h (struct gdbm_file_info)<last_syserror>
+	<last_errstr>: New members.
+	* src/gdbmerrno.c (gdbm_set_errno): Set last_syserror as well.
+	(gdbm_clear_error): Reset last_syserror.
+	(gdbm_last_syserr): New function.
+	(gdbm_errlist): New entry for GDBM_BACKUP_FAILED.
+	(gdbm_db_strerror): New function.
+	(gdbm_syserr): New global.
+	* src/gdbmload.c (get_parms): Buffer can be NULL.
+	* src/gdbmopen.c (gdbm_fd_open): New function.
+	(gdbm_open): Rewrite as a wrapper over gdbm_fd_open.
+	* src/gdbmreorg.c (gdbm_reorganize): Rewrite as a wrapper
+	over gdbm_recover.
+	* src/proto.h (_gdbm_next_bucket_dir): New proto.
+	* src/gdbmtool.c: New command: recover.
+	* tests/.gitignore: Add gtrecover
+	* tests/gtrecover.c: New test program.
+	* tests/Makefile.am: Build gtrecover
+
+2016-07-16  Sergey Poznyakoff  <gray@gnu.org.ua>
+
+	Bugfix
+
+2016-07-15  Sergey Poznyakoff  <gray@gnu.org.ua>
+
+	New gdbm_setopt option to get the actual block size value
+
+	* src/gdbm.h.in (GDBM_GETBLOCKSIZE): New option.
+	* src/gdbmcount.c (gdbm_count): Fix memory leak on
+	error.
+	* src/gdbmsetopt.c (gdbm_setopt): Rewrite.
+	Handle GDBM_GETBLOCKSIZE.
+
+	* NEWS: Document GDBM_GETBLOCKSIZE
+	* doc/gdbm.texi: Likewise.
+
+	* tests/gtload.c: New options -bsexact and -verbose.
+	* tests/Makefile.am: Add new testcases.
+	* tests/testsuite.at: Likewise.
+	* tests/blocksize00.at: New testcase.
+	* tests/blocksize01.at: Likewise.
+	* tests/blocksize02.at: Likewise.
+
+	gdbm_open adjusts requested block size to accomodate integer number of directory offsets.
+
+	* src/gdbm.h.in (GDBM_BSEXACT): New flag.
+	* src/gdbmopen.c (compute_directory_size): New function.
+	(gdbm_open): When creating new database, adjust the requested
+	block size so that the block holds integer number of directory
+	indices.  Disable this behavior if GDBM_BSEXACT flag is set
+	(this reverts to old behavior).  Always unset GDBM_BSEXACT if
+	using block size returned by stat(2).  This makes sure gdbm_open
+	succeeds on file systems reporting block sizes not divisible by
+	512.
+	* src/gdbmconst.h (GDBM_MIN_BLOCK_SIZE): New constant.
+	* src/gdbmimp.c (gdbm_import_from_file): Use GDBM_MIN_BLOCK_SIZE
+	instead of the hardcoded value.
+	* NEWS: Document GDBM_BSEXACT.
+	* doc/gdbm.texi: Likewise.
+
+2016-07-14  Sergey Poznyakoff  <gray@gnu.org.ua>
+
+	Don't use hardcoded constant
+
+	* src/gdbmconst.h (GDBM_HASH_BITS): New constant.
+	* src/bucket.c: Use GDBM_HASH_BITS instead of the
+	hardcoded value.
+	* src/findkey.c (_gdbm_findkey): Use _gdbm_hash_key.
+
+	* src/gdbmtool.c (hash_handler): Use _gdbm_hash_key if the
+	database is open.
+	* src/hash.c (_gdbm_bucket_dir, _gdbm_hash_key): New functions.
+	* src/proto.h (_gdbm_bucket_dir, _gdbm_hash_key): New protos.
+
+	* src/systems.h (STATBLKSIZE): Take a struct stat as argument.
+	* src/gdbmopen.c (STATBLKSIZE): Takes argument now.
+
+	gdbmtool: improve bucket dump and hash calculator
+
+	* src/gdbmtool.c (format_key_start): New function.
+	(print_bucket): Take variadic arguments, use mesg
+	as prinf-style format.
+	Display first bytes of each non-empty key.
+	(print_current_bucket_begin): Avoid coredump if
+	gdbm_file is not initialized.
+	(print_current_bucket_handler): Change header depending on the
+	invoking command.
+	(hash_handler): In presence of a database, print also the
+	bucket number and offset within the bucket.
+
+2016-07-13  Sergey Poznyakoff  <gray@gnu.org.ua>
+
+	Bugfix
+
+	Bugfix
+
+	Update magic file
+
+	* src/gdbm.magic: Recognize dumpfiles.
+
+	Update NEWS
+
+	Provide the gdbm.magic file for file(1).
+
+	* src/gdbm.magic: New file.
+	* README: Document existence of the magic file.
+	* src/Makefile.am (EXTRA_DIST): Add gdbm.magic.
+
+	gdbmtool: define macros for accessing typed handler arguments.
+
+	* src/gdbmtool.h (PARAM_STRING, PARAM_DATUM)
+	(PARAM_KVPAIR): New defines.
+	* src/gdbmtool.c: Use above for accessing handler arguments.
+
+2016-07-12  Sergey Poznyakoff  <gray@gnu.org.ua>
+
+	Line-editing support in gdbmtool
+
+	* configure.ac: Check if GNU Readline is available.
+	* src/Makefile.am: Add new files.
+	* src/input-rl.c: New file.
+	* src/input-std.c: New file.
+	* src/gdbmtool.c (handler_param): Move declaration to
+	the header file.
+	(quit_handler): Call input_done.
+	(command_tab): Add the "history" command.
+	(command_generator): New function.
+	(slist_new_s, slist_new_l)
+	(slist_insert): New functions.
+	(main): Call input_init and input_done.
+	* src/gdbmtool.h: New protos.
+	* src/gram.y: Use slist_insert to construct string lists.
+	* src/lex.l (read_input): Remove.  Use input_read instead.
+	(print_prompt_at_bol): New function.
+	(print_prompt): Remove.
+	(make_prompt): New function.
+
+	* NEWS: Document changes.
+	* README: Document readline support.
+	* doc/gdbm.texi: Document line editing in gdbmtool.
+	* doc/gdbmtool.1: Likewise.
+
+2016-07-09  Sergey Poznyakoff  <gray@gnu.org.ua>
+
+	Don't bail out on fatal errors, unless the user defines the fatal_err function
+
+	* src/bucket.c (_gdbm_get_bucket)
+	(_gdbm_split_bucket, _gdbm_write_bucket): Return error code. All callers
+	updated.
+	* src/proto.h (_gdbm_get_bucket)
+	(_gdbm_split_bucket, _gdbm_write_bucket): Update declarations
+	* src/falloc.c (push_avail_block)
+	(pop_avail_block): Return error code. All callers
+	updated.
+	* src/update.c (_gdbm_fatal): Exit only if the user defined
+	fatal_err function.
+
+	* src/gdbmerrno.c (gdbm_needs_recovery): New function.
+	* src/gdbm.h.in (gdbm_needs_recovery): New proto.
+
+	* compat/dbminit.c: Set gdbm_errno on fatal errors.
+	* compat/dbmopen.c: Likewise.
+	* src/findkey.c: Likewise.
+	* src/gdbm_load.c: Likewise.
+	* src/gdbmcount.c: Likewise.
+	* src/gdbmdefs.h: Likewise.
+	* src/gdbmdelete.c: Likewise.
+	* src/gdbmdump.c: Likewise.
+	* src/gdbmexists.c: Likewise.
+	* src/gdbmexp.c: Likewise.
+	* src/gdbmfetch.c: Likewise.
+	* src/gdbmimp.c: Likewise.
+	* src/gdbmload.c: Likewise.
+	* src/gdbmopen.c: Likewise.
+	* src/gdbmreorg.c: Likewise.
+	* src/gdbmseq.c: Likewise.
+	* src/gdbmsetopt.c: Likewise.
+	* src/gdbmstore.c: Likewise.
+	* src/gdbmsync.c: Likewise.
+	* src/mmap.c: Likewise.
+
+	All gdbm functions return immediately if the DB is in inconsistent sate (needs recovery).
+
+	* src/gdbm.h.in (GDBM_NEED_RECOVERY): New error code.
+	* src/gdbmdefs.h (GDBM_ASSERT_CONSISTENCY): New macro.
+	* src/gdbmerrno.c: Update.
+	* src/gdbmopen.c (gdbm_open): Initialize need_recovery
+	and last_error.
+
+	* src/gdbmcount.c (gdbm_count): Return immediately if the
+	database needs recovery.
+	* src/gdbmdelete.c (gdbm_delete): Likewise.
+	* src/gdbmdump.c (gdbm_dump_to_file, gdbm_dump): Likewise.
+	* src/gdbmexists.c (gdbm_exists): Likewise.
+	* src/gdbmexp.c (gdbm_export_to_file): Likewise.
+	* src/gdbmfetch.c (gdbm_fetch): Likewise.
+	* src/gdbmimp.c (gdbm_import_from_file): Likewise.
+	* src/gdbmreorg.c (gdbm_reorganize): Likewise.
+	* src/gdbmseq.c (gdbm_firstkey): Likewise.
+	* src/gdbmsetopt.c (gdbm_nextkey): Likewise.
+	* src/gdbmstore.c (gdbm_store): Likewise.
+	* src/gdbmsync.c (gdbm_sync): Likewise.
+
+	Fix indentation
+
+	Per-database error state.
+
+	Last error code is stored in the database file structure as
+	well as in the global gdbm_errno.  Special functions are provided
+	for retrieving and clearing the last error state.
+
+	* src/gdbmdefs.h (gdbm_file_info): New member: last_error
+	* src/gdbm.h.in (gdbm_last_errno, gdbm_set_errno)
+	(gdbm_clear_error): New protos.
+	* src/gdbmerrno.c (gdbm_last_errno, gdbm_set_errno)
+	(gdbm_clear_error): New functions
+
+	* NEWS: Update.
+
+	* compat/dbminit.c: Use gdbm_set_errno to set error state.
+	* compat/dbmopen.c: Likewise.
+	* src/bucket.c: Likewise.
+	* src/findkey.c: Likewise.
+	* src/gdbm_load.c: Likewise.
+	* src/gdbmcount.c: Likewise.
+	* src/gdbmdelete.c: Likewise.
+	* src/gdbmdump.c: Likewise.
+	* src/gdbmexists.c: Likewise.
+	* src/gdbmexp.c: Likewise.
+	* src/gdbmfetch.c: Likewise.
+	* src/gdbmimp.c: Likewise.
+	* src/gdbmload.c: Likewise.
+	* src/gdbmopen.c: Likewise.
+	* src/gdbmreorg.c: Likewise.
+	* src/gdbmseq.c: Likewise.
+	* src/gdbmsetopt.c: Likewise.
+	* src/gdbmstore.c: Likewise.
+	* src/gdbmsync.c: Likewise.
+	* src/mmap.c: Likewise.
+
+2016-07-07  Sergey Poznyakoff  <gray@gnu.org.ua>
+
+	Switch to Git repository
+
+	* .cvsignore: Rename to .gitignore
+	* compat/.cvsignore: Likewise.
+	* doc/.cvsignore: Likewise.
+	* export/.cvsignore: Likewise.
+	* po/.cvsignore: Likewise.
+	* src/.cvsignore: Likewise.
+	* tests/.cvsignore: Likewise.
+
+	* doc/gdbm.texinfo: Rename to doc/gdbm.texi
+	* doc/Makefile.am: Update
+
+        Generate ChangeLog from Git log
+
+	* ChangeLog: Rename to ChangeLog.cvs
+	* Makefile.am: Recreate ChangeLog
+	* bootstrap: Create a ChangeLog placeholder.
+	* git2chg.awk: New file.
+
+2016-07-06  Sergey Poznyakoff  <gray@gnu.org.ua>
+
+	* doc/gdbm.texinfo: Normal installation prefix is /usr.
+	* doc/gdbm.3: Spell fixes.
+
 2016-05-16  Sergey Poznyakoff  <gray@gnu.org.ua>
 
 	Version 1.12
@@ -1911,3 +2414,9 @@ Tue Apr 10 12:18:40 1990  Phil Nelson  (phil at unicorn.wwu.edu)
 
 
 
+
+Local Variables:
+mode: change-log
+version-control: never
+buffer-read-only: t
+End:

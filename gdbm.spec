@@ -5,11 +5,11 @@
 # Source0 file verified with key 0x3602B07F55D0C732 (gray@gnu.org)
 #
 Name     : gdbm
-Version  : 1.12
-Release  : 18
-URL      : ftp://ftp.gnu.org/gnu/gdbm/gdbm-1.12.tar.gz
-Source0  : ftp://ftp.gnu.org/gnu/gdbm/gdbm-1.12.tar.gz
-Source99 : ftp://ftp.gnu.org/gnu/gdbm/gdbm-1.12.tar.gz.sig
+Version  : 1.13
+Release  : 19
+URL      : ftp://ftp.gnu.org/gnu/gdbm/gdbm-1.13.tar.gz
+Source0  : ftp://ftp.gnu.org/gnu/gdbm/gdbm-1.13.tar.gz
+Source99 : ftp://ftp.gnu.org/gnu/gdbm/gdbm-1.13.tar.gz.sig
 Summary  : No detailed summary available
 Group    : Development/Tools
 License  : GFDL-1.3 GPL-3.0 GPL-3.0+
@@ -24,6 +24,8 @@ BuildRequires : gcc-libgcc32
 BuildRequires : gcc-libstdc++32
 BuildRequires : glibc-dev32
 BuildRequires : glibc-libc32
+BuildRequires : ncurses-dev
+BuildRequires : readline-dev
 
 %description
 See the end of file for copying conditions.
@@ -101,14 +103,14 @@ locales components for the gdbm package.
 
 
 %prep
-%setup -q -n gdbm-1.12
+%setup -q -n gdbm-1.13
 pushd ..
-cp -a gdbm-1.12 build32
+cp -a gdbm-1.13 build32
 popd
 
 %build
 export LANG=C
-export SOURCE_DATE_EPOCH=1484495141
+export SOURCE_DATE_EPOCH=1489584715
 %configure --disable-static --enable-libgdbm-compat
 make V=1  %{?_smp_mflags}
 
@@ -128,7 +130,7 @@ export no_proxy=localhost
 make VERBOSE=1 V=1 %{?_smp_mflags} check
 
 %install
-export SOURCE_DATE_EPOCH=1484495141
+export SOURCE_DATE_EPOCH=1489584715
 rm -rf %{buildroot}
 pushd ../build32/
 %make_install32
