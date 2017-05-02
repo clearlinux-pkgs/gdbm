@@ -6,7 +6,7 @@
 #
 Name     : gdbm
 Version  : 1.13
-Release  : 19
+Release  : 20
 URL      : ftp://ftp.gnu.org/gnu/gdbm/gdbm-1.13.tar.gz
 Source0  : ftp://ftp.gnu.org/gnu/gdbm/gdbm-1.13.tar.gz
 Source99 : ftp://ftp.gnu.org/gnu/gdbm/gdbm-1.13.tar.gz.sig
