@@ -1,0 +1,8 @@
+Configure miss: main in -ldbm
+Configure miss: main in -lndbm
+Configure miss: main in -ldbm
+Configure miss: main in -lndbm
+Configure miss: tputs in -lncurses
+Configure miss: tputs in -lcurses
+Configure miss: tputs in -ltermcap
+Configure miss: readline in -lreadline

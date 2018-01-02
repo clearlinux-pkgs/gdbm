@@ -41,6 +41,7 @@ libgdbm.so.4:gdbm_db_strerror
 libgdbm.so.4:gdbm_delete
 libgdbm.so.4:gdbm_dump
 libgdbm.so.4:gdbm_dump_to_file
+libgdbm.so.4:gdbm_errno_location
 libgdbm.so.4:gdbm_exists
 libgdbm.so.4:gdbm_export
 libgdbm.so.4:gdbm_export_to_file

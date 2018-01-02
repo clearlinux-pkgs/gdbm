@@ -1,4 +1,72 @@
+2018-01-01  Sergey Poznyakoff  <gray@gnu.org>
+
+	Version 1.14
+
+	Happy GNU Year
+
+2017-12-23  Sergey Poznyakoff  <gray@gnu.org>
+
+	Fix build with --enable-gdbm-export
+
+	* THANKS: Add Jakub Bogusz
+	* export/export.c: Define GDBM_EXPORT_18 prior to
+	including gdbmexp.c
+	* src/gdbmexp.c [GDBM_EXPORT_18]: Define GDBM_SET_ERRNO and
+	GDBM_ASSERT_CONSISTENCY.
+
+	Bugfix
+
+	* src/gdbmsetopt.c: Ignore NULL entries
+
+	Complement c175231e
+
+	* configure.ac: Check whether __thread qualifier is supported
+	* src/gdbmerrno.c (gdbm_errno_storage): Use GDBM_THREAD_LOCAL instead
+	of __thread.
+
+2017-12-21  Sergey Poznyakoff  <gray@gnu.org>
+
+	Improve database reproducibility
+
+	* src/gdbmopen.c (gdbm_fd_open): Fill allocated memory with 0's
+	where necessary.
+	Check return value from fstat.
+	* src/mmap.c (_gdbm_file_size): Set errno here, instead of delegating
+	that to the caller.
+	(_gdbm_file_extend): New function.
+	(_gdbm_mapped_remap): Call _gdbm_file_extend instead of leaving the
+	newly allocated space filled with garbage.
+	* src/gdbmload.c (_set_gdbm_meta_info): Additional error checking.
+	* NEWS: Update.
+
+2017-12-19  Sergey Poznyakoff  <gray@gnu.org.ua>
+
+	Make gdbm_error thread-safe
+
+	* src/gdbm.h.in (gdbm_errno_location): New extern
+	(gdbm_errno): Change to a define.
+	* src/gdbmerrno.c (gdbm_errno_location): New function.
+	(gdbm_errno_storage): Thread-safe storage for the last errno.
+
+2017-10-28  Sergey Poznyakoff  <gray@gnu.org>
+
+	Fix manpage formatting.
+
+2017-07-24  Sergey Poznyakoff  <gray@gnu.org.ua>
+
+	Fix handling of group headers in --help output.
+
+	* src/parseopt.c (print_option_descr): Return if descr is NULL
+	or empty. Translate it using gettext.
+	All callers changed.
+
+2017-04-14  Sergey Poznyakoff  <gray@gnu.org.ua>
+
+	Fix a typo
+
 2017-03-11  Sergey Poznyakoff  <gray@gnu.org>
+
+	Fix GENDOCS command line
 
 	Version 1.13
 

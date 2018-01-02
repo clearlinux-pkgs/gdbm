@@ -1,5 +1,5 @@
 PKG_NAME := gdbm
-URL := ftp://ftp.gnu.org/gnu/gdbm/gdbm-1.13.tar.gz
+URL = ftp://ftp.gnu.org/gnu/gdbm/gdbm-1.14.tar.gz
 
 
 include ../common/Makefile.common
