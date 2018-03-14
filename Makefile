@@ -1,5 +1,5 @@
 PKG_NAME := gdbm
-URL = ftp://ftp.gnu.org/gnu/gdbm/gdbm-1.14.tar.gz
-
+URL = https://mirrors.kernel.org/gnu/gdbm/gdbm-1.14.tar.gz
+ARCHIVES = 
 
 include ../common/Makefile.common

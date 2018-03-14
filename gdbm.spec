@@ -6,10 +6,10 @@
 #
 Name     : gdbm
 Version  : 1.14
-Release  : 22
-URL      : ftp://ftp.gnu.org/gnu/gdbm/gdbm-1.14.tar.gz
-Source0  : ftp://ftp.gnu.org/gnu/gdbm/gdbm-1.14.tar.gz
-Source99 : ftp://ftp.gnu.org/gnu/gdbm/gdbm-1.14.tar.gz.sig
+Release  : 23
+URL      : https://mirrors.kernel.org/gnu/gdbm/gdbm-1.14.tar.gz
+Source0  : https://mirrors.kernel.org/gnu/gdbm/gdbm-1.14.tar.gz
+Source99 : https://mirrors.kernel.org/gnu/gdbm/gdbm-1.14.tar.gz.sig
 Summary  : No detailed summary available
 Group    : Development/Tools
 License  : GPL-3.0 GPL-3.0+
@@ -113,7 +113,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1514860794
+export SOURCE_DATE_EPOCH=1521069323
 %configure --disable-static --enable-libgdbm-compat
 make  %{?_smp_mflags}
 
@@ -133,7 +133,7 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make VERBOSE=1 V=1 %{?_smp_mflags} check
 
 %install
-export SOURCE_DATE_EPOCH=1514860794
+export SOURCE_DATE_EPOCH=1521069323
 rm -rf %{buildroot}
 pushd ../build32/
 %make_install32
