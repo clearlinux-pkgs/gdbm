@@ -6,7 +6,7 @@
 #
 Name     : gdbm
 Version  : 1.14
-Release  : 23
+Release  : 24
 URL      : https://mirrors.kernel.org/gnu/gdbm/gdbm-1.14.tar.gz
 Source0  : https://mirrors.kernel.org/gnu/gdbm/gdbm-1.14.tar.gz
 Source99 : https://mirrors.kernel.org/gnu/gdbm/gdbm-1.14.tar.gz.sig
