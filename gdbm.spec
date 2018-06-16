@@ -5,19 +5,22 @@
 # Source0 file verified with key 0x3602B07F55D0C732 (gray@gnu.org)
 #
 Name     : gdbm
-Version  : 1.14
-Release  : 24
-URL      : https://mirrors.kernel.org/gnu/gdbm/gdbm-1.14.tar.gz
-Source0  : https://mirrors.kernel.org/gnu/gdbm/gdbm-1.14.tar.gz
-Source99 : https://mirrors.kernel.org/gnu/gdbm/gdbm-1.14.tar.gz.sig
+Version  : 1.15
+Release  : 25
+URL      : https://mirrors.kernel.org/gnu/gdbm/gdbm-1.15.tar.gz
+Source0  : https://mirrors.kernel.org/gnu/gdbm/gdbm-1.15.tar.gz
+Source99 : https://mirrors.kernel.org/gnu/gdbm/gdbm-1.15.tar.gz.sig
 Summary  : No detailed summary available
 Group    : Development/Tools
 License  : GPL-3.0 GPL-3.0+
 Requires: gdbm-bin
 Requires: gdbm-lib
-Requires: gdbm-doc
+Requires: gdbm-license
 Requires: gdbm-locales
+Requires: gdbm-man
 BuildRequires : bison
+BuildRequires : dejagnu
+BuildRequires : expect
 BuildRequires : flex
 BuildRequires : gcc-dev32
 BuildRequires : gcc-libgcc32
@@ -26,6 +29,7 @@ BuildRequires : glibc-dev32
 BuildRequires : glibc-libc32
 BuildRequires : ncurses-dev
 BuildRequires : readline-dev
+BuildRequires : tcl
 
 %description
 See the end of file for copying conditions.
@@ -43,6 +47,8 @@ the documentation can be accessed by running `man gdbm' and
 %package bin
 Summary: bin components for the gdbm package.
 Group: Binaries
+Requires: gdbm-license
+Requires: gdbm-man
 
 %description bin
 bin components for the gdbm package.
@@ -73,6 +79,7 @@ dev32 components for the gdbm package.
 %package doc
 Summary: doc components for the gdbm package.
 Group: Documentation
+Requires: gdbm-man
 
 %description doc
 doc components for the gdbm package.
@@ -81,6 +88,7 @@ doc components for the gdbm package.
 %package lib
 Summary: lib components for the gdbm package.
 Group: Libraries
+Requires: gdbm-license
 
 %description lib
 lib components for the gdbm package.
@@ -89,9 +97,18 @@ lib components for the gdbm package.
 %package lib32
 Summary: lib32 components for the gdbm package.
 Group: Default
+Requires: gdbm-license
 
 %description lib32
 lib32 components for the gdbm package.
+
+
+%package license
+Summary: license components for the gdbm package.
+Group: Default
+
+%description license
+license components for the gdbm package.
 
 
 %package locales
@@ -102,10 +119,18 @@ Group: Default
 locales components for the gdbm package.
 
 
+%package man
+Summary: man components for the gdbm package.
+Group: Default
+
+%description man
+man components for the gdbm package.
+
+
 %prep
-%setup -q -n gdbm-1.14
+%setup -q -n gdbm-1.15
 pushd ..
-cp -a gdbm-1.14 build32
+cp -a gdbm-1.15 build32
 popd
 
 %build
@@ -113,7 +138,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1521069323
+export SOURCE_DATE_EPOCH=1529171098
 %configure --disable-static --enable-libgdbm-compat
 make  %{?_smp_mflags}
 
@@ -133,8 +158,10 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make VERBOSE=1 V=1 %{?_smp_mflags} check
 
 %install
-export SOURCE_DATE_EPOCH=1521069323
+export SOURCE_DATE_EPOCH=1529171098
 rm -rf %{buildroot}
+mkdir -p %{buildroot}/usr/share/doc/gdbm
+cp COPYING %{buildroot}/usr/share/doc/gdbm/COPYING
 pushd ../build32/
 %make_install32
 if [ -d  %{buildroot}/usr/lib32/pkgconfig ]
@@ -168,24 +195,33 @@ popd
 /usr/lib32/libgdbm_compat.so
 
 %files doc
-%defattr(-,root,root,-)
+%defattr(0644,root,root,0755)
 %doc /usr/share/info/*
-%doc /usr/share/man/man1/*
-%doc /usr/share/man/man3/*
 
 %files lib
 %defattr(-,root,root,-)
-/usr/lib64/libgdbm.so.4
-/usr/lib64/libgdbm.so.4.0.0
+/usr/lib64/libgdbm.so.6
+/usr/lib64/libgdbm.so.6.0.0
 /usr/lib64/libgdbm_compat.so.4
 /usr/lib64/libgdbm_compat.so.4.0.0
 
 %files lib32
 %defattr(-,root,root,-)
-/usr/lib32/libgdbm.so.4
-/usr/lib32/libgdbm.so.4.0.0
+/usr/lib32/libgdbm.so.6
+/usr/lib32/libgdbm.so.6.0.0
 /usr/lib32/libgdbm_compat.so.4
 /usr/lib32/libgdbm_compat.so.4.0.0
+
+%files license
+%defattr(-,root,root,-)
+/usr/share/doc/gdbm/COPYING
+
+%files man
+%defattr(-,root,root,-)
+/usr/share/man/man1/gdbm_dump.1
+/usr/share/man/man1/gdbm_load.1
+/usr/share/man/man1/gdbmtool.1
+/usr/share/man/man3/gdbm.3
 
 %files locales -f gdbm.lang
 %defattr(-,root,root,-)
