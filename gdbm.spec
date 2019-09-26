@@ -6,18 +6,18 @@
 #
 Name     : gdbm
 Version  : 1.15
-Release  : 26
+Release  : 27
 URL      : https://mirrors.kernel.org/gnu/gdbm/gdbm-1.15.tar.gz
 Source0  : https://mirrors.kernel.org/gnu/gdbm/gdbm-1.15.tar.gz
-Source99 : https://mirrors.kernel.org/gnu/gdbm/gdbm-1.15.tar.gz.sig
+Source1 : https://mirrors.kernel.org/gnu/gdbm/gdbm-1.15.tar.gz.sig
 Summary  : No detailed summary available
 Group    : Development/Tools
 License  : GPL-3.0 GPL-3.0+
-Requires: gdbm-bin
-Requires: gdbm-lib
-Requires: gdbm-license
-Requires: gdbm-locales
-Requires: gdbm-man
+Requires: gdbm-bin = %{version}-%{release}
+Requires: gdbm-lib = %{version}-%{release}
+Requires: gdbm-license = %{version}-%{release}
+Requires: gdbm-locales = %{version}-%{release}
+Requires: gdbm-man = %{version}-%{release}
 BuildRequires : bison
 BuildRequires : dejagnu
 BuildRequires : expect
@@ -47,8 +47,7 @@ the documentation can be accessed by running `man gdbm' and
 %package bin
 Summary: bin components for the gdbm package.
 Group: Binaries
-Requires: gdbm-license
-Requires: gdbm-man
+Requires: gdbm-license = %{version}-%{release}
 
 %description bin
 bin components for the gdbm package.
@@ -57,9 +56,10 @@ bin components for the gdbm package.
 %package dev
 Summary: dev components for the gdbm package.
 Group: Development
-Requires: gdbm-lib
-Requires: gdbm-bin
-Provides: gdbm-devel
+Requires: gdbm-lib = %{version}-%{release}
+Requires: gdbm-bin = %{version}-%{release}
+Provides: gdbm-devel = %{version}-%{release}
+Requires: gdbm = %{version}-%{release}
 
 %description dev
 dev components for the gdbm package.
@@ -68,9 +68,9 @@ dev components for the gdbm package.
 %package dev32
 Summary: dev32 components for the gdbm package.
 Group: Default
-Requires: gdbm-lib32
-Requires: gdbm-bin
-Requires: gdbm-dev
+Requires: gdbm-lib32 = %{version}-%{release}
+Requires: gdbm-bin = %{version}-%{release}
+Requires: gdbm-dev = %{version}-%{release}
 
 %description dev32
 dev32 components for the gdbm package.
@@ -79,7 +79,7 @@ dev32 components for the gdbm package.
 %package doc
 Summary: doc components for the gdbm package.
 Group: Documentation
-Requires: gdbm-man
+Requires: gdbm-man = %{version}-%{release}
 
 %description doc
 doc components for the gdbm package.
@@ -88,7 +88,7 @@ doc components for the gdbm package.
 %package lib
 Summary: lib components for the gdbm package.
 Group: Libraries
-Requires: gdbm-license
+Requires: gdbm-license = %{version}-%{release}
 
 %description lib
 lib components for the gdbm package.
@@ -97,7 +97,7 @@ lib components for the gdbm package.
 %package lib32
 Summary: lib32 components for the gdbm package.
 Group: Default
-Requires: gdbm-license
+Requires: gdbm-license = %{version}-%{release}
 
 %description lib32
 lib32 components for the gdbm package.
@@ -137,31 +137,42 @@ popd
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
-export LANG=C
-export SOURCE_DATE_EPOCH=1529171098
+export LANG=C.UTF-8
+export SOURCE_DATE_EPOCH=1569524387
+export GCC_IGNORE_WERROR=1
+export AR=gcc-ar
+export RANLIB=gcc-ranlib
+export NM=gcc-nm
+export CFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
+export FCFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
+export FFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
+export CXXFLAGS="$CXXFLAGS -O3 -ffat-lto-objects -flto=4 "
 %configure --disable-static --enable-libgdbm-compat
 make  %{?_smp_mflags}
 
 pushd ../build32/
 export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
-export CFLAGS="$CFLAGS -m32"
-export CXXFLAGS="$CXXFLAGS -m32"
-export LDFLAGS="$LDFLAGS -m32"
+export ASFLAGS="${ASFLAGS}${ASFLAGS:+ }--32"
+export CFLAGS="${CFLAGS}${CFLAGS:+ }-m32 -mstackrealign"
+export CXXFLAGS="${CXXFLAGS}${CXXFLAGS:+ }-m32 -mstackrealign"
+export LDFLAGS="${LDFLAGS}${LDFLAGS:+ }-m32 -mstackrealign"
 %configure --disable-static --enable-libgdbm-compat   --libdir=/usr/lib32 --build=i686-generic-linux-gnu --host=i686-generic-linux-gnu --target=i686-clr-linux-gnu
 make  %{?_smp_mflags}
 popd
 %check
-export LANG=C
+export LANG=C.UTF-8
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 make VERBOSE=1 V=1 %{?_smp_mflags} check
+cd ../build32;
+make VERBOSE=1 V=1 %{?_smp_mflags} check || :
 
 %install
-export SOURCE_DATE_EPOCH=1529171098
+export SOURCE_DATE_EPOCH=1569524387
 rm -rf %{buildroot}
-mkdir -p %{buildroot}/usr/share/doc/gdbm
-cp COPYING %{buildroot}/usr/share/doc/gdbm/COPYING
+mkdir -p %{buildroot}/usr/share/package-licenses/gdbm
+cp COPYING %{buildroot}/usr/share/package-licenses/gdbm/COPYING
 pushd ../build32/
 %make_install32
 if [ -d  %{buildroot}/usr/lib32/pkgconfig ]
@@ -185,9 +196,12 @@ popd
 
 %files dev
 %defattr(-,root,root,-)
-/usr/include/*.h
+/usr/include/dbm.h
+/usr/include/gdbm.h
+/usr/include/ndbm.h
 /usr/lib64/libgdbm.so
 /usr/lib64/libgdbm_compat.so
+/usr/share/man/man3/gdbm.3
 
 %files dev32
 %defattr(-,root,root,-)
@@ -213,15 +227,14 @@ popd
 /usr/lib32/libgdbm_compat.so.4.0.0
 
 %files license
-%defattr(-,root,root,-)
-/usr/share/doc/gdbm/COPYING
+%defattr(0644,root,root,0755)
+/usr/share/package-licenses/gdbm/COPYING
 
 %files man
-%defattr(-,root,root,-)
+%defattr(0644,root,root,0755)
 /usr/share/man/man1/gdbm_dump.1
 /usr/share/man/man1/gdbm_load.1
 /usr/share/man/man1/gdbmtool.1
-/usr/share/man/man3/gdbm.3
 
 %files locales -f gdbm.lang
 %defattr(-,root,root,-)
