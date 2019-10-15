@@ -1,8 +1,72 @@
-GNU dbm NEWS -- history of user-visible changes. 2018-06-16
+GNU dbm NEWS -- history of user-visible changes. 2018-10-27
 Copyright (C) 1990-2018 Free Software Foundation, Inc.
 See the end of file for copying conditions.
 
 Please send gdbm bug reports to <bug-gdbm@gnu.org>.
+
+Version 1.18.1 - 2018-10-27
+
+* Fix debian bug 910911
+
+This restores backward compatibility with databases created by version
+1.8 (and some later versions, with mmapped I/O disabled).
+See https://bugs.debian.org/910911 for a detailed description.
+
+
+Version 1.18 - 2018-08-21
+
+* Bugfixes:
+
+** Fix directory entry validation
+See https://puszcza.gnu.org.ua/bugs/?402
+
+Directory validation function would falsely report corruption after
+several directory reallocations.
+
+** Fix improper use of GDBM_DEBUG macro
+See https://puszcza.gnu.org.ua/bugs/?401
+
+** Fix spurious error from gdbm_dump and gdbm_export
+
+The functions incorrectly reported as error the GDBM_ITEM_NOT_FOUND
+status, which is reported when upon normal termination of iteration
+over the database keys.
+
+** Make sure gdbm_sync always returns a meaningful value
+See https://puszcza.gnu.org.ua/bugs/?400
+
+Version 1.17 - 2018-07-30
+
+* int gdbm_close and gdbm_sync
+
+Both functions now return 0 on success. On error, they return -1
+and set gdbm_errno and errno to the appropriate error codes.
+
+* Fix bug in gdbm_dump function
+
+The function did not clear the GDBM_ITEM_NOT_FOUND error marker, which
+is set upon its normal termination.
+
+
+Version 1.16 - 2018-06-27
+
+* Maintain sorting order of the available block list after coalescing
+
+This is a very long-standing bug, dated back to the time when optional
+coalescing of available blocks with the newly released block was
+introduced. Merging the released block with an adjacent block of
+available space would clobber the sorting order of the available list.
+The bug was discovered due to strict database consistency checks,
+introduced in version 1.15.
+
+The fix introduced in this version will silently restore the proper
+sorting order of available block list before its use.
+
+* Improve block merging algorithm
+
+New implementation of block merging algorithm will correctly handle
+both left and right-adjacent blocks.
+
 
 Version 1.15 - 2018-06-15
 
@@ -456,7 +520,7 @@ Copyright (C) 1990-2017 Free Software Foundation, Inc.
 Local variables:
 mode: outline
 paragraph-separate: "[ 	]*$"
-eval: (add-hook 'write-file-hooks 'time-stamp)
+eval: (add-hook 'write-file-functions 'time-stamp)
 time-stamp-start: "changes. "
 time-stamp-format: "%:y-%02m-%02d"
 time-stamp-end: "\n"

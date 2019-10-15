@@ -5,11 +5,11 @@
 # Source0 file verified with key 0x3602B07F55D0C732 (gray@gnu.org)
 #
 Name     : gdbm
-Version  : 1.15
-Release  : 27
-URL      : https://mirrors.kernel.org/gnu/gdbm/gdbm-1.15.tar.gz
-Source0  : https://mirrors.kernel.org/gnu/gdbm/gdbm-1.15.tar.gz
-Source1 : https://mirrors.kernel.org/gnu/gdbm/gdbm-1.15.tar.gz.sig
+Version  : 1.18.1
+Release  : 28
+URL      : https://mirrors.kernel.org/gnu/gdbm/gdbm-1.18.1.tar.gz
+Source0  : https://mirrors.kernel.org/gnu/gdbm/gdbm-1.18.1.tar.gz
+Source1 : https://mirrors.kernel.org/gnu/gdbm/gdbm-1.18.1.tar.gz.sig
 Summary  : No detailed summary available
 Group    : Development/Tools
 License  : GPL-3.0 GPL-3.0+
@@ -128,9 +128,9 @@ man components for the gdbm package.
 
 
 %prep
-%setup -q -n gdbm-1.15
+%setup -q -n gdbm-1.18.1
 pushd ..
-cp -a gdbm-1.15 build32
+cp -a gdbm-1.18.1 build32
 popd
 
 %build
@@ -138,7 +138,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1569524387
+export SOURCE_DATE_EPOCH=1571165711
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
@@ -169,10 +169,10 @@ cd ../build32;
 make VERBOSE=1 V=1 %{?_smp_mflags} check || :
 
 %install
-export SOURCE_DATE_EPOCH=1569524387
+export SOURCE_DATE_EPOCH=1571165711
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/gdbm
-cp COPYING %{buildroot}/usr/share/package-licenses/gdbm/COPYING
+cp %{_builddir}/gdbm-1.18.1/COPYING %{buildroot}/usr/share/package-licenses/gdbm/70e64fe9090c157e441681779e0f31aad34f35cb
 pushd ../build32/
 %make_install32
 if [ -d  %{buildroot}/usr/lib32/pkgconfig ]
@@ -228,7 +228,7 @@ popd
 
 %files license
 %defattr(0644,root,root,0755)
-/usr/share/package-licenses/gdbm/COPYING
+/usr/share/package-licenses/gdbm/70e64fe9090c157e441681779e0f31aad34f35cb
 
 %files man
 %defattr(0644,root,root,0755)

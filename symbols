@@ -33,6 +33,7 @@ libgdbm.so.6:_gdbm_read_bucket_at
 libgdbm.so.6:_gdbm_read_entry
 libgdbm.so.6:_gdbm_split_bucket
 libgdbm.so.6:_gdbm_unlock_file
+libgdbm.so.6:_gdbm_validate_header
 libgdbm.so.6:_gdbm_write_bucket
 libgdbm.so.6:gdbm_avail_block_validate
 libgdbm.so.6:gdbm_avail_table_valid_p
