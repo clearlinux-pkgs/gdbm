@@ -6,7 +6,7 @@
 #
 Name     : gdbm
 Version  : 1.18.1
-Release  : 28
+Release  : 29
 URL      : https://mirrors.kernel.org/gnu/gdbm/gdbm-1.18.1.tar.gz
 Source0  : https://mirrors.kernel.org/gnu/gdbm/gdbm-1.18.1.tar.gz
 Source1 : https://mirrors.kernel.org/gnu/gdbm/gdbm-1.18.1.tar.gz.sig
@@ -138,7 +138,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1571165711
+export SOURCE_DATE_EPOCH=1571264865
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
@@ -147,7 +147,7 @@ export CFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
 export FCFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
 export FFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
 export CXXFLAGS="$CXXFLAGS -O3 -ffat-lto-objects -flto=4 "
-%configure --disable-static --enable-libgdbm-compat
+%configure --disable-static --disable-libgdbm-compat
 make  %{?_smp_mflags}
 
 pushd ../build32/
@@ -156,7 +156,7 @@ export ASFLAGS="${ASFLAGS}${ASFLAGS:+ }--32"
 export CFLAGS="${CFLAGS}${CFLAGS:+ }-m32 -mstackrealign"
 export CXXFLAGS="${CXXFLAGS}${CXXFLAGS:+ }-m32 -mstackrealign"
 export LDFLAGS="${LDFLAGS}${LDFLAGS:+ }-m32 -mstackrealign"
-%configure --disable-static --enable-libgdbm-compat   --libdir=/usr/lib32 --build=i686-generic-linux-gnu --host=i686-generic-linux-gnu --target=i686-clr-linux-gnu
+%configure --disable-static --disable-libgdbm-compat   --libdir=/usr/lib32 --build=i686-generic-linux-gnu --host=i686-generic-linux-gnu --target=i686-clr-linux-gnu
 make  %{?_smp_mflags}
 popd
 %check
@@ -169,7 +169,7 @@ cd ../build32;
 make VERBOSE=1 V=1 %{?_smp_mflags} check || :
 
 %install
-export SOURCE_DATE_EPOCH=1571165711
+export SOURCE_DATE_EPOCH=1571264865
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/gdbm
 cp %{_builddir}/gdbm-1.18.1/COPYING %{buildroot}/usr/share/package-licenses/gdbm/70e64fe9090c157e441681779e0f31aad34f35cb
@@ -196,17 +196,13 @@ popd
 
 %files dev
 %defattr(-,root,root,-)
-/usr/include/dbm.h
 /usr/include/gdbm.h
-/usr/include/ndbm.h
 /usr/lib64/libgdbm.so
-/usr/lib64/libgdbm_compat.so
 /usr/share/man/man3/gdbm.3
 
 %files dev32
 %defattr(-,root,root,-)
 /usr/lib32/libgdbm.so
-/usr/lib32/libgdbm_compat.so
 
 %files doc
 %defattr(0644,root,root,0755)
@@ -216,15 +212,11 @@ popd
 %defattr(-,root,root,-)
 /usr/lib64/libgdbm.so.6
 /usr/lib64/libgdbm.so.6.0.0
-/usr/lib64/libgdbm_compat.so.4
-/usr/lib64/libgdbm_compat.so.4.0.0
 
 %files lib32
 %defattr(-,root,root,-)
 /usr/lib32/libgdbm.so.6
 /usr/lib32/libgdbm.so.6.0.0
-/usr/lib32/libgdbm_compat.so.4
-/usr/lib32/libgdbm_compat.so.4.0.0
 
 %files license
 %defattr(0644,root,root,0755)
