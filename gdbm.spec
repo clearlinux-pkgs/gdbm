@@ -6,7 +6,7 @@
 #
 Name     : gdbm
 Version  : 1.18.1
-Release  : 29
+Release  : 30
 URL      : https://mirrors.kernel.org/gnu/gdbm/gdbm-1.18.1.tar.gz
 Source0  : https://mirrors.kernel.org/gnu/gdbm/gdbm-1.18.1.tar.gz
 Source1 : https://mirrors.kernel.org/gnu/gdbm/gdbm-1.18.1.tar.gz.sig
@@ -14,6 +14,7 @@ Summary  : No detailed summary available
 Group    : Development/Tools
 License  : GPL-3.0 GPL-3.0+
 Requires: gdbm-bin = %{version}-%{release}
+Requires: gdbm-info = %{version}-%{release}
 Requires: gdbm-lib = %{version}-%{release}
 Requires: gdbm-license = %{version}-%{release}
 Requires: gdbm-locales = %{version}-%{release}
@@ -76,13 +77,12 @@ Requires: gdbm-dev = %{version}-%{release}
 dev32 components for the gdbm package.
 
 
-%package doc
-Summary: doc components for the gdbm package.
-Group: Documentation
-Requires: gdbm-man = %{version}-%{release}
+%package info
+Summary: info components for the gdbm package.
+Group: Default
 
-%description doc
-doc components for the gdbm package.
+%description info
+info components for the gdbm package.
 
 
 %package lib
@@ -129,6 +129,7 @@ man components for the gdbm package.
 
 %prep
 %setup -q -n gdbm-1.18.1
+cd %{_builddir}/gdbm-1.18.1
 pushd ..
 cp -a gdbm-1.18.1 build32
 popd
@@ -138,7 +139,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1571264865
+export SOURCE_DATE_EPOCH=1573772692
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
@@ -169,7 +170,7 @@ cd ../build32;
 make VERBOSE=1 V=1 %{?_smp_mflags} check || :
 
 %install
-export SOURCE_DATE_EPOCH=1571264865
+export SOURCE_DATE_EPOCH=1573772692
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/gdbm
 cp %{_builddir}/gdbm-1.18.1/COPYING %{buildroot}/usr/share/package-licenses/gdbm/70e64fe9090c157e441681779e0f31aad34f35cb
@@ -204,9 +205,9 @@ popd
 %defattr(-,root,root,-)
 /usr/lib32/libgdbm.so
 
-%files doc
+%files info
 %defattr(0644,root,root,0755)
-%doc /usr/share/info/*
+/usr/share/info/gdbm.info
 
 %files lib
 %defattr(-,root,root,-)
