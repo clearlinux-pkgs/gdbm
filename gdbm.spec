@@ -6,7 +6,7 @@
 #
 Name     : gdbm
 Version  : 1.18.1
-Release  : 30
+Release  : 31
 URL      : https://mirrors.kernel.org/gnu/gdbm/gdbm-1.18.1.tar.gz
 Source0  : https://mirrors.kernel.org/gnu/gdbm/gdbm-1.18.1.tar.gz
 Source1 : https://mirrors.kernel.org/gnu/gdbm/gdbm-1.18.1.tar.gz.sig
