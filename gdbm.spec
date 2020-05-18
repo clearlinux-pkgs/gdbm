@@ -6,10 +6,10 @@
 #
 Name     : gdbm
 Version  : 1.18.1
-Release  : 31
+Release  : 32
 URL      : https://mirrors.kernel.org/gnu/gdbm/gdbm-1.18.1.tar.gz
 Source0  : https://mirrors.kernel.org/gnu/gdbm/gdbm-1.18.1.tar.gz
-Source1 : https://mirrors.kernel.org/gnu/gdbm/gdbm-1.18.1.tar.gz.sig
+Source1  : https://mirrors.kernel.org/gnu/gdbm/gdbm-1.18.1.tar.gz.sig
 Summary  : No detailed summary available
 Group    : Development/Tools
 License  : GPL-3.0 GPL-3.0+
@@ -31,6 +31,7 @@ BuildRequires : glibc-libc32
 BuildRequires : ncurses-dev
 BuildRequires : readline-dev
 BuildRequires : tcl
+Patch1: gcc10.patch
 
 %description
 See the end of file for copying conditions.
@@ -130,6 +131,7 @@ man components for the gdbm package.
 %prep
 %setup -q -n gdbm-1.18.1
 cd %{_builddir}/gdbm-1.18.1
+%patch1 -p1
 pushd ..
 cp -a gdbm-1.18.1 build32
 popd
@@ -139,14 +141,14 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1573772692
+export SOURCE_DATE_EPOCH=1589811493
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
 export NM=gcc-nm
 export CFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
-export FCFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
-export FFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
+export FCFLAGS="$FFLAGS -O3 -ffat-lto-objects -flto=4 "
+export FFLAGS="$FFLAGS -O3 -ffat-lto-objects -flto=4 "
 export CXXFLAGS="$CXXFLAGS -O3 -ffat-lto-objects -flto=4 "
 %configure --disable-static --disable-libgdbm-compat
 make  %{?_smp_mflags}
@@ -170,7 +172,7 @@ cd ../build32;
 make VERBOSE=1 V=1 %{?_smp_mflags} check || :
 
 %install
-export SOURCE_DATE_EPOCH=1573772692
+export SOURCE_DATE_EPOCH=1589811493
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/gdbm
 cp %{_builddir}/gdbm-1.18.1/COPYING %{buildroot}/usr/share/package-licenses/gdbm/70e64fe9090c157e441681779e0f31aad34f35cb
