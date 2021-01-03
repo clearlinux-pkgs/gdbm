@@ -1,0 +1,10 @@
+# Readline 8.1 enables bracketed paste mode by default, which in turn causes
+# one of the dejagnu tests to fail: the "version" test expects a string
+# matching a regex anchored at the beginning, but bracketed paste mode outputs
+# a CSI sequence at the beginning instead, causing the regex match to fail.
+# Turn off bracketed paste mode to fix it.
+bind "set enable-bracketed-paste off"
+echo "set enable-bracketed-paste off" > $HOME/.inputrc
+make %{?_smp_mflags} check
+cd ../build32;
+make %{?_smp_mflags} check || :

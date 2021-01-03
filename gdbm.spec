@@ -5,11 +5,11 @@
 # Source0 file verified with key 0x3602B07F55D0C732 (gray@gnu.org)
 #
 Name     : gdbm
-Version  : 1.18.1
-Release  : 32
-URL      : https://mirrors.kernel.org/gnu/gdbm/gdbm-1.18.1.tar.gz
-Source0  : https://mirrors.kernel.org/gnu/gdbm/gdbm-1.18.1.tar.gz
-Source1  : https://mirrors.kernel.org/gnu/gdbm/gdbm-1.18.1.tar.gz.sig
+Version  : 1.19
+Release  : 33
+URL      : https://mirrors.kernel.org/gnu/gdbm/gdbm-1.19.tar.gz
+Source0  : https://mirrors.kernel.org/gnu/gdbm/gdbm-1.19.tar.gz
+Source1  : https://mirrors.kernel.org/gnu/gdbm/gdbm-1.19.tar.gz.sig
 Summary  : No detailed summary available
 Group    : Development/Tools
 License  : GPL-3.0 GPL-3.0+
@@ -31,7 +31,6 @@ BuildRequires : glibc-libc32
 BuildRequires : ncurses-dev
 BuildRequires : readline-dev
 BuildRequires : tcl
-Patch1: gcc10.patch
 
 %description
 See the end of file for copying conditions.
@@ -129,11 +128,10 @@ man components for the gdbm package.
 
 
 %prep
-%setup -q -n gdbm-1.18.1
-cd %{_builddir}/gdbm-1.18.1
-%patch1 -p1
+%setup -q -n gdbm-1.19
+cd %{_builddir}/gdbm-1.19
 pushd ..
-cp -a gdbm-1.18.1 build32
+cp -a gdbm-1.19 build32
 popd
 
 %build
@@ -141,7 +139,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1589811493
+export SOURCE_DATE_EPOCH=1609701709
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
@@ -167,15 +165,22 @@ export LANG=C.UTF-8
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
-make VERBOSE=1 V=1 %{?_smp_mflags} check
+# Readline 8.1 enables bracketed paste mode by default, which in turn causes
+# one of the dejagnu tests to fail: the "version" test expects a string
+# matching a regex anchored at the beginning, but bracketed paste mode outputs
+# a CSI sequence at the beginning instead, causing the regex match to fail.
+# Turn off bracketed paste mode to fix it.
+bind "set enable-bracketed-paste off"
+echo "set enable-bracketed-paste off" > $HOME/.inputrc
+make %{?_smp_mflags} check
 cd ../build32;
-make VERBOSE=1 V=1 %{?_smp_mflags} check || :
+make %{?_smp_mflags} check || :
 
 %install
-export SOURCE_DATE_EPOCH=1589811493
+export SOURCE_DATE_EPOCH=1609701709
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/gdbm
-cp %{_builddir}/gdbm-1.18.1/COPYING %{buildroot}/usr/share/package-licenses/gdbm/70e64fe9090c157e441681779e0f31aad34f35cb
+cp %{_builddir}/gdbm-1.19/COPYING %{buildroot}/usr/share/package-licenses/gdbm/70e64fe9090c157e441681779e0f31aad34f35cb
 pushd ../build32/
 %make_install32
 if [ -d  %{buildroot}/usr/lib32/pkgconfig ]
