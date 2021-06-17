@@ -1,8 +1,28 @@
-GNU dbm NEWS -- history of user-visible changes. 2020-12-23
-Copyright (C) 1990-2020 Free Software Foundation, Inc.
+GNU dbm NEWS -- history of user-visible changes. 2021-06-17
+Copyright (C) 1990-2021 Free Software Foundation, Inc.
 See the end of file for copying conditions.
 
 Please send gdbm bug reports to <bug-gdbm@gnu.org>.
+
+Version 1.20, 2021-06-17
+
+* New bucket cache
+
+The bucket cache support has been rewritten from scratch.  The new
+bucket cache code provides for significant speed up of search
+operations.
+
+* Change mmap prereading strategy 
+
+Pre-reading of the memory mapper regions, introduced in version 1.19
+can be advantageous only when doing intensive look-ups on a read-only
+database.  It degrades performance otherwise, especially if doing
+multiple inserts.  Therefore, this version introduces a new flag
+to gdbm_open: GDBM_PREREAD.  When given, it enables pre-reading of
+memory mapped regions.
+
+See https://github.com/Perl/perl5/issues/18884 for details.
+
 
 Version 1.19 - 2020-12-23
 
@@ -45,9 +65,9 @@ See https://puszcza.gnu.org.ua/bugs/?401
 
 ** Fix spurious error from gdbm_dump and gdbm_export
 
-The functions incorrectly reported as error the GDBM_ITEM_NOT_FOUND
-status, which is reported when upon normal termination of iteration
-over the database keys.
+The functions incorrectly treated as error the GDBM_ITEM_NOT_FOUND
+status, which is reported upon normal termination of iteration
+over database keys.
 
 ** Make sure gdbm_sync always returns a meaningful value
 See https://puszcza.gnu.org.ua/bugs/?400
@@ -522,7 +542,7 @@ Version 0.9
 ----------------------------------------------------------------------
 Copyright information:
 
-Copyright (C) 1990-2020 Free Software Foundation, Inc.
+Copyright (C) 1990-2021 Free Software Foundation, Inc.
 
    Permission is granted to anyone to make or distribute verbatim copies
    of this document as received, in any medium, provided that the

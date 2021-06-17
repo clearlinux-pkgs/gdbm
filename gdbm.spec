@@ -5,11 +5,11 @@
 # Source0 file verified with key 0x3602B07F55D0C732 (gray@gnu.org)
 #
 Name     : gdbm
-Version  : 1.19
-Release  : 33
-URL      : https://mirrors.kernel.org/gnu/gdbm/gdbm-1.19.tar.gz
-Source0  : https://mirrors.kernel.org/gnu/gdbm/gdbm-1.19.tar.gz
-Source1  : https://mirrors.kernel.org/gnu/gdbm/gdbm-1.19.tar.gz.sig
+Version  : 1.20
+Release  : 34
+URL      : https://mirrors.kernel.org/gnu/gdbm/gdbm-1.20.tar.gz
+Source0  : https://mirrors.kernel.org/gnu/gdbm/gdbm-1.20.tar.gz
+Source1  : https://mirrors.kernel.org/gnu/gdbm/gdbm-1.20.tar.gz.sig
 Summary  : No detailed summary available
 Group    : Development/Tools
 License  : GPL-3.0 GPL-3.0+
@@ -34,16 +34,10 @@ BuildRequires : tcl
 
 %description
 See the end of file for copying conditions.
-* Introduction
-This file contains brief information about configuring, testing
-and using GNU dbm.  It is *not* intended as a replacement
-for the documentation, instead it is provided as a brief reference
-only. The complete documentation is available in doc/ subdirectory.
-To read the manpage without installing the package use `man
-doc/gdbm.3'.  To read texinfo documentation without installing the
-package, run `info -f doc/gdbm.info'.  After the package is installed
-the documentation can be accessed by running `man gdbm' and
-`info gdbm'.
+* Note
+This is an experimental branch of GNU DBM.  Its goal is to evaluate
+possibilities of improving the caching scheme.  Please don't use it
+in production.
 
 %package bin
 Summary: bin components for the gdbm package.
@@ -128,10 +122,10 @@ man components for the gdbm package.
 
 
 %prep
-%setup -q -n gdbm-1.19
-cd %{_builddir}/gdbm-1.19
+%setup -q -n gdbm-1.20
+cd %{_builddir}/gdbm-1.20
 pushd ..
-cp -a gdbm-1.19 build32
+cp -a gdbm-1.20 build32
 popd
 
 %build
@@ -139,7 +133,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1609701709
+export SOURCE_DATE_EPOCH=1623944034
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
@@ -177,10 +171,10 @@ cd ../build32;
 make %{?_smp_mflags} check || :
 
 %install
-export SOURCE_DATE_EPOCH=1609701709
+export SOURCE_DATE_EPOCH=1623944034
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/gdbm
-cp %{_builddir}/gdbm-1.19/COPYING %{buildroot}/usr/share/package-licenses/gdbm/70e64fe9090c157e441681779e0f31aad34f35cb
+cp %{_builddir}/gdbm-1.20/COPYING %{buildroot}/usr/share/package-licenses/gdbm/70e64fe9090c157e441681779e0f31aad34f35cb
 pushd ../build32/
 %make_install32
 if [ -d  %{buildroot}/usr/lib32/pkgconfig ]
