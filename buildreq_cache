@@ -1,8 +1,6 @@
-1.20
-bison
+1.23
 dejagnu
 expect
-flex
 ncurses-dev
 readline-dev
 tcl

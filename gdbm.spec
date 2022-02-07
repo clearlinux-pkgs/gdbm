@@ -5,11 +5,11 @@
 # Source0 file verified with key 0x3602B07F55D0C732 (gray@gnu.org)
 #
 Name     : gdbm
-Version  : 1.20
-Release  : 34
-URL      : https://mirrors.kernel.org/gnu/gdbm/gdbm-1.20.tar.gz
-Source0  : https://mirrors.kernel.org/gnu/gdbm/gdbm-1.20.tar.gz
-Source1  : https://mirrors.kernel.org/gnu/gdbm/gdbm-1.20.tar.gz.sig
+Version  : 1.23
+Release  : 35
+URL      : https://mirrors.kernel.org/gnu/gdbm/gdbm-1.23.tar.gz
+Source0  : https://mirrors.kernel.org/gnu/gdbm/gdbm-1.23.tar.gz
+Source1  : https://mirrors.kernel.org/gnu/gdbm/gdbm-1.23.tar.gz.sig
 Summary  : No detailed summary available
 Group    : Development/Tools
 License  : GPL-3.0 GPL-3.0+
@@ -19,10 +19,8 @@ Requires: gdbm-lib = %{version}-%{release}
 Requires: gdbm-license = %{version}-%{release}
 Requires: gdbm-locales = %{version}-%{release}
 Requires: gdbm-man = %{version}-%{release}
-BuildRequires : bison
 BuildRequires : dejagnu
 BuildRequires : expect
-BuildRequires : flex
 BuildRequires : gcc-dev32
 BuildRequires : gcc-libgcc32
 BuildRequires : gcc-libstdc++32
@@ -34,10 +32,16 @@ BuildRequires : tcl
 
 %description
 See the end of file for copying conditions.
-* Note
-This is an experimental branch of GNU DBM.  Its goal is to evaluate
-possibilities of improving the caching scheme.  Please don't use it
-in production.
+* Introduction
+This file contains brief information about configuring, testing
+and using GNU dbm.  It is *not* intended as a replacement
+for the documentation, instead it is provided as a brief reference
+only. The complete documentation is available in doc/ subdirectory.
+To read the manpage without installing the package use `man
+doc/gdbm.3'.  To read texinfo documentation without installing the
+package, run `info -f doc/gdbm.info'.  After the package is installed
+the documentation can be accessed by running `man gdbm' and
+`info gdbm'.
 
 %package bin
 Summary: bin components for the gdbm package.
@@ -122,10 +126,10 @@ man components for the gdbm package.
 
 
 %prep
-%setup -q -n gdbm-1.20
-cd %{_builddir}/gdbm-1.20
+%setup -q -n gdbm-1.23
+cd %{_builddir}/gdbm-1.23
 pushd ..
-cp -a gdbm-1.20 build32
+cp -a gdbm-1.23 build32
 popd
 
 %build
@@ -133,20 +137,20 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1623944034
+export SOURCE_DATE_EPOCH=1644258522
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
 export NM=gcc-nm
-export CFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
-export FCFLAGS="$FFLAGS -O3 -ffat-lto-objects -flto=4 "
-export FFLAGS="$FFLAGS -O3 -ffat-lto-objects -flto=4 "
-export CXXFLAGS="$CXXFLAGS -O3 -ffat-lto-objects -flto=4 "
+export CFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=auto "
+export FCFLAGS="$FFLAGS -O3 -ffat-lto-objects -flto=auto "
+export FFLAGS="$FFLAGS -O3 -ffat-lto-objects -flto=auto "
+export CXXFLAGS="$CXXFLAGS -O3 -ffat-lto-objects -flto=auto "
 %configure --disable-static --disable-libgdbm-compat
 make  %{?_smp_mflags}
 
 pushd ../build32/
-export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
+export PKG_CONFIG_PATH="/usr/lib32/pkgconfig:/usr/share/pkgconfig"
 export ASFLAGS="${ASFLAGS}${ASFLAGS:+ }--32"
 export CFLAGS="${CFLAGS}${CFLAGS:+ }-m32 -mstackrealign"
 export CXXFLAGS="${CXXFLAGS}${CXXFLAGS:+ }-m32 -mstackrealign"
@@ -171,15 +175,21 @@ cd ../build32;
 make %{?_smp_mflags} check || :
 
 %install
-export SOURCE_DATE_EPOCH=1623944034
+export SOURCE_DATE_EPOCH=1644258522
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/gdbm
-cp %{_builddir}/gdbm-1.20/COPYING %{buildroot}/usr/share/package-licenses/gdbm/70e64fe9090c157e441681779e0f31aad34f35cb
+cp %{_builddir}/gdbm-1.23/COPYING %{buildroot}/usr/share/package-licenses/gdbm/70e64fe9090c157e441681779e0f31aad34f35cb
 pushd ../build32/
 %make_install32
 if [ -d  %{buildroot}/usr/lib32/pkgconfig ]
 then
 pushd %{buildroot}/usr/lib32/pkgconfig
+for i in *.pc ; do ln -s $i 32$i ; done
+popd
+fi
+if [ -d %{buildroot}/usr/share/pkgconfig ]
+then
+pushd %{buildroot}/usr/share/pkgconfig
 for i in *.pc ; do ln -s $i 32$i ; done
 popd
 fi
