@@ -1,6 +1,7 @@
 Configure miss: readline in -lreadline
 Configure miss: struct stat.st_mtimespec
 Configure miss: struct stat.st_mtimespec
+Configure miss: struct stat.st_mtimespec
 Configure miss: tputs in -lcurses
 Configure miss: tputs in -lncurses
 Configure miss: tputs in -ltermcap
